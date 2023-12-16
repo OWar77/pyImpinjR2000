@@ -165,7 +165,7 @@ class ImpinjR2KReader( object ):
     def __del__( self ):
         self.worker_close( )
 
-    def scan_serial_port( self, description='COM' ):
+    def scan_serial_port( self, description='/dev/tty' ):
         """
             device[0] : COMxx
             device[1] : Prolific USB-to-Serial Comm Port (COMxx)
@@ -174,6 +174,12 @@ class ImpinjR2KReader( object ):
         for device in list( serial.tools.list_ports.comports() ):
             if description in device[1]:
                 yield device[0]
+
+    def get_device_path( self):
+        devices = list(serial.tools.list_ports.grep("1A86:7523"))
+        if not devices:
+            raise ValueError("No device found with VID=1A86 and PID=7523")
+        return devices[0].device
 
     def connect( self, port='/dev/ttyUSB0', baudrate=115200 ):
         self.ser = serial.serial_for_url( port, do_not_open=True )
