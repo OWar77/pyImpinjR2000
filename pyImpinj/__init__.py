@@ -179,9 +179,17 @@ class ImpinjR2KReader( object ):
         devices = list(serial.tools.list_ports.grep("1A86:7523"))
         if not devices:
             raise ValueError("No device found with VID=1A86 and PID=7523")
+        if len(devices) > 1:
+            logging.info(f"{len(devices)} devices found. Using first one")
+            for i in devices:
+                logging.info(f"{i[0].device} device")
         return devices[0].device
 
-    def connect( self, port='/dev/ttyUSB0', baudrate=115200 ):
+    def connect( self, port='', baudrate=115200 ):
+        if len(port) == 0:
+            logging.debug("no port provided. Looking for port")
+            port = self.get_device_path()
+            logging.info(f"Found device at {port}. Connecting")
         self.ser = serial.serial_for_url( port, do_not_open=True )
         self.ser.baudrate, self.ser.bytesize = baudrate, 8
         self.ser.parity, self.ser.stopbits = serial.PARITY_NONE, serial.STOPBITS_ONE

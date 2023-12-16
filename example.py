@@ -20,9 +20,7 @@ from pyImpinj import ImpinjR2KReader
 TAG_QUEUE = queue.Queue( 1024 )
 R2000 = ImpinjR2KReader( TAG_QUEUE, address=1 )
 
-device = R2000.get_device_path()
-print(f"Device path: {device}")
-R2000.connect(device)
+R2000.connect()
 
 R2000.worker_start()
 
