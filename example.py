@@ -23,22 +23,14 @@ R2000.connect( '/dev/ttyUSB0' )
 
 R2000.worker_start()
 
-# R2000.rt_inventory( repeat=100 )
-print("\n\tTEMP")
 R2000.temperature()
 
 print(R2000.scan_connected_antenna())
 
-print("\n\tSet default antenna")
-R2000.set_work_antenna(antenna=0)
-
-print("\n\tGet frequency region")
 print(R2000.get_frequency_region())
 
-print("\n\tInventory")
 R2000.inventory()
 
-print("\n\tGet inventory buffer tag count")
 R2000.get_inventory_buffer_tag_count()
 print(R2000.get_inventory_buffer())
-# print( TAG_QUEUE.get( ) )
+#print( TAG_QUEUE.get( ) )

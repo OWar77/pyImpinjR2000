@@ -259,7 +259,7 @@ class ImpinjR2KReader( object ):
         # scan antennas for connection
         # return list of connected antennas
         # get current ant to restore later
-        current_ant = self.get_work_antenna()
+        current_ant = int.from_bytes(self.get_work_antenna())
         logging.debug(f'Current antenna: {current_ant}')
         connected_antennas = {}
         self.set_ant_connection_detector( loss=10 )
@@ -267,10 +267,10 @@ class ImpinjR2KReader( object ):
             self.set_work_antenna(antenna=i)
             loss = self.get_rf_port_return_loss()
             if loss > ANTENNA_CONNECTION_DETECTOR_THRESHOLD['ANTENNA_MIN_LOSS']:
-                connected_antennas[f'antenna{i+1}'] = f'connected:{loss}dbm'
+                connected_antennas[f'ANTENNA{i+1}'] = True
                 logging.info(f'Antenna {i+1} is connected. Loss: {loss}dbm')
             else:
-                connected_antennas[f'antenna{i+1}'] = f'disconnected:{loss}dbm'
+                connected_antennas[f'ANTENNA{i+1}'] = False
                 logging.info(f'Antenna {i+1} is disconnected. Loss: {loss}dbm')
         self.set_ant_connection_detector(loss=0)
         self.set_work_antenna(antenna=current_ant)
