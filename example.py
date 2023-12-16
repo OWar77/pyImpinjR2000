@@ -27,17 +27,7 @@ R2000.worker_start()
 print("\n\tTEMP")
 R2000.temperature()
 
-for i in range(4):
-    print(f"\tSet work antenna {i}")
-    R2000.set_work_antenna(antenna=i)
-
-    print("\tSet ant connection detector")
-    R2000.set_ant_connection_detector(loss=10)
-
-    print("\t get rf port return loss")
-    print(R2000.get_rf_port_return_loss())
-
-    R2000.set_ant_connection_detector(0)
+print(R2000.scan_connected_antenna())
 
 print("\n\tSet default antenna")
 R2000.set_work_antenna(antenna=0)

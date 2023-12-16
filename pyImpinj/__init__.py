@@ -33,7 +33,7 @@ from .enums    import ImpinjR2KGlobalErrors
 from .enums    import ImpinjR2KFastSwitchInventory
 
 from .protocol import ImpinjR2KProtocols
-from .constant import FREQUENCY_TABLES, READER_ANTENNA
+from .constant import FREQUENCY_TABLES, READER_ANTENNA, ANTENNA_CONNECTION_DETECTOR_THRESHOLD
 
 
 class ImpinjProtocolFactory( serial.threaded.FramedPacket ):
@@ -175,7 +175,7 @@ class ImpinjR2KReader( object ):
             if description in device[1]:
                 yield device[0]
 
-    def connect( self, port='COM1', baudrate=115200 ):
+    def connect( self, port='/dev/ttyUSB0', baudrate=115200 ):
         self.ser = serial.serial_for_url( port, do_not_open=True )
         self.ser.baudrate, self.ser.bytesize = baudrate, 8
         self.ser.parity, self.ser.stopbits = serial.PARITY_NONE, serial.STOPBITS_ONE
@@ -254,9 +254,30 @@ class ImpinjR2KReader( object ):
             logging.error( 'Get rf port return loss fail.' )
             return 0
         return value[0]
+    
+    def scan_connected_antenna( self ):
+        # scan antennas for connection
+        # return list of connected antennas
+        # get current ant to restore later
+        current_ant = self.get_work_antenna()
+        logging.debug(f'Current antenna: {current_ant}')
+        connected_antennas = {}
+        self.set_ant_connection_detector( loss=10 )
+        for i in range(4):
+            self.set_work_antenna(antenna=i)
+            loss = self.get_rf_port_return_loss()
+            if loss > ANTENNA_CONNECTION_DETECTOR_THRESHOLD['ANTENNA_MIN_LOSS']:
+                connected_antennas[f'antenna{i+1}'] = f'connected:{loss}dbm'
+                logging.info(f'Antenna {i+1} is connected. Loss: {loss}dbm')
+            else:
+                connected_antennas[f'antenna{i+1}'] = f'disconnected:{loss}dbm'
+                logging.info(f'Antenna {i+1} is disconnected. Loss: {loss}dbm')
+        self.set_ant_connection_detector(loss=0)
+        self.set_work_antenna(antenna=current_ant)
+        return connected_antennas
 
-    def rt_inventory( self, repeat=1 ):
-        self.protocol.rt_inventory( repeat=repeat )
+    def rt_inventory(self, repeat=1):
+        self.protocol.rt_inventory(repeat=repeat)
 
     def session_inventory( self, session='S1', target='A', repeat=1 ):
         self.protocol.session_inventory( session='S1', target='A', repeat=1 )

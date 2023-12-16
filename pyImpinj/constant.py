@@ -21,3 +21,5 @@ READER_ANTENNA = {  'ANTENNA1' : 0,
                     'MAX'      : 4 }
 
 FREQUENCY_TABLES = [ 865+(x*0.5) for x in range( 7 ) ] + [ 902+(x*0.5) for x in range( 53 ) ]
+
+ANTENNA_CONNECTION_DETECTOR_THRESHOLD = { 'ANTENNA_MIN_LOSS' : 2 }
