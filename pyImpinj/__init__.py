@@ -273,7 +273,7 @@ class ImpinjR2KReader( object ):
         # scan antennas for connection
         # return list of connected antennas
         # get current ant to restore later
-        current_ant = int.from_bytes(self.get_work_antenna())
+        current_ant = int.from_bytes(self.get_work_antenna(), 'big')
         logging.debug(f'Current antenna: {current_ant}')
         connected_antennas = {}
         self.set_ant_connection_detector( loss=10 )
