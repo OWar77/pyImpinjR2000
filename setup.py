@@ -19,13 +19,13 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = long_description.replace('\r', '')
 
 setup(
-    name='pyImpinj',
-    version='1.2',
+    name='pyImpinjR2000',
+    version='1.2.1',
 
     description='Library for Impinj R2000 Reader',
     long_description=long_description,
 
-    url='https://github.com/hex-in/pyImpinj',
+    url='https://github.com/OWar77/pyImpinjR2000',
     author='Heyn',
     author_email='heyunhuan@gmail.com',
 
@@ -49,7 +49,7 @@ setup(
     include_package_data=True,
 
     keywords=['Impinj', 'R2000'],
-    packages=['pyImpinj'],
+    packages=['pyImpinjR2000'],
 
     install_requires=[ 'pyserial', 'libscrc' ],
 
